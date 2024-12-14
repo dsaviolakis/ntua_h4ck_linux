@@ -8,11 +8,15 @@ use std::time::Duration;
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use std::env;
-use sha2::{Sha256, Digest}; // Add sha2 crate in Cargo.toml
-use std::process; // Import to get the PID
+use sha2::{Sha256, Digest};
+use std::process;
+
+// This challenge is created as a **beginner friendly** way for attendees of the event to use newly acquired knowledge.
+// Obviously, with basic reverse engineering knowledge the challenges can be easily bypassed.
+// The source code may NOT follow the best practices for the rust language, since this is an educational project.
 
 const TOTAL_LEVELS: u8 = 6;
-const SECRET_KEY: &str = "supersecretkey"; // Change this to a more secure value
+const SECRET_KEY: &str = "supersecretkey"; // This needs to be changed to something more secure!
 
 fn main() {
     // Get the current working directory where the binary is being run
@@ -179,7 +183,7 @@ fn create_level(level: u8) {
 
         }
         3 => {
-                        // Level 3: Create hidden file with restricted permissions
+            // Level 3: Create hidden file with restricted permissions
             let level3_filename = format!("{}/.flag.txt", level_dir);
             let flag = generate_flag(level);
             let mut file = File::create(&level3_filename).expect("Failed to create hidden flag file.");
@@ -195,8 +199,7 @@ fn create_level(level: u8) {
             println!("Hint: Use `ls -la` to explore file permissions and `chmod` to change them.");
         }
         4 => {
-// Level 4: Create symbolic link challenge
-
+            // Level 4: Create symbolic link challenge
             // Create the hidden directory and flag file
             let hidden_dir = format!("{}/.hidden_flag", level_dir);
             fs::create_dir_all(&hidden_dir).expect("Failed to create .hidden_flag directory.");
@@ -222,7 +225,7 @@ fn create_level(level: u8) {
             println!("You might need to follow the symlink to discover the flag.");
         }
         5 => {
-                        // Level 5: Deeply nested directories with the flag
+            // Level 5: Deeply nested directories with the flag
             let level5_dir = format!("{}/level5", level_dir);
             fs::create_dir_all(&level5_dir).expect("Failed to create base directory for level 5.");
 
@@ -302,7 +305,7 @@ fn generate_hash(level: u8) -> String {
 
 fn get_current_level_from_hash(stored_hash: &str) -> u8 {
     // For simplicity, let's assume we can reverse the hash by brute force.
-    // This should be replaced by an actual method if you want stronger protection.
+    // This should be replaced by an actual method if stronger protection is needed.
     for level in 0..=TOTAL_LEVELS+1 {
         let generated_hash = generate_hash(level);
         if generated_hash == stored_hash {
